@@ -1,0 +1,27 @@
+<?php
+//Test pour voir pourquoi les langues ne changeaient pas.
+namespace Tests\Feature;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
+use Tests\TestCase;
+
+class LanguageChangeTest extends TestCase
+{
+    public function test_changer_langue_et_conserver_session()
+    {
+        //  L'utilisateur visite /about?langue=fr
+        $response = $this->get('/about?langue=fr');
+
+        // Vérifie que la vue existe bien
+        $response->assertStatus(200);
+        $response->assertViewIs('fr.about');
+
+        // On simule que la session a bien enregistré la langue
+        $response = $this->withSession(['locale' => 'fr'])->get('/contact');
+
+        // La langue doit rester en français
+        $response->assertStatus(200);
+        $response->assertViewIs('fr.contact');
+    }
+}
