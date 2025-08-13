@@ -34,17 +34,18 @@ Route::get('/terms-of-service', function () { return view('ui-terms-of-service')
 Route::post('/sending-email-for-procedure', [EmailProcedureController::class, 'sendEmailProcedure'])->name('email-procedure');
 Route::post('/sending-email-for-contact', [EmailContactController::class, 'sendEmailContact'])->name('email-contact');
 
-Route::post('/admin/login', [AdminAuthController::class, 'login']);
-Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
-Route::post('/admin/visiteurs', [VisiteurController::class, 'store']);
-Route::post('frequency', [AdminController::class, 'updateFrequency'])->name('admin.frequency.update');
+//Route::post('/admin/login', [AdminAuthController::class, 'login']);
+//Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
+//Route::post('/admin/visiteurs', [VisiteurController::class, 'store']);
+//Route::post('frequency', [AdminController::class, 'updateFrequency'])->name('admin.frequency.update');
 
 Route::post('/newsletter/subscribe', [NewsletterSubscriptionController::class, 'subscribe'])->name('newsletter.subscribe');
 
 /******************** ROUTES DELETE *******************/
-Route::delete('/admin/visiteurs/{id}', [VisiteurController::class, 'destroy']);
+//Route::delete('/admin/visiteurs/{id}', [VisiteurController::class, 'destroy']);
 
 /******************** AUTH ROUTES ********************/
+// Auth Routes
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
 
@@ -53,9 +54,20 @@ Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+use App\Http\Controllers\DashboardController;
+
+// Dashboard routes (auth required)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/projects', [DashboardController::class, 'storeProject'])->name('project_s');
+});
+
+use App\Http\Controllers\ProjectController;
+
+Route::get('/projects', [ProjectController::class, 'index'])->name('prj');
+Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+
+
 
 /******************** MULTI-LANGUE ROUTE ********************/
 Route::get('/{page?}', function ($page = 'welcome') {
@@ -85,3 +97,6 @@ Route::get('/{page?}', function ($page = 'welcome') {
 
     abort(404, "Vue '$view' introuvable.");
 })->name('chemin');
+
+
+
