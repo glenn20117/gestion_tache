@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
 use App\Http\Controllers\ProjectController;
 
 Route::get('/projects', [ProjectController::class, 'index'])->name('prj');
-Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('p_destroy');
 
 
 

@@ -46,25 +46,58 @@
 
 <h1>Bienvenue, {{ auth()->user()->name }} !</h1>
 
-<form method="POST" action="{{ route('project_s') }}">
-    @csrf
-    <label>Nom du projet *</label>
-    <input type="text" name="name" required>
+<div class="text-center">
+    <button type="button" id="show-form-btn">➕ Créer un projet</button>
+</div>
 
-    <label>Description</label>
-    <textarea name="description"></textarea>
+<div class="form" id="project-form" style="display: none; margin-top: 20px;">
+    <form action="{{ route('project_s') }}" method="post" role="form">
+        @csrf
+        <div class="form-row">
+            <div class="form-group col-lg-6">
+                <label>Nom du projet *</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Nom du projet" data-rule="minlen:4" data-msg="Veuillez entrer au moins 4 caractères" required />
+                <div class="validation"></div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Statut</label>
+                <input type="text" class="form-control" id="status" name="status" placeholder="Statut" />
+                <div class="validation"></div>
+            </div>
+        </div>
 
-    <label>Date début</label>
-    <input type="date" name="start_date">
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" name="description" rows="5" placeholder="Description"></textarea>
+            <div class="validation"></div>
+        </div>
 
-    <label>Date fin</label>
-    <input type="date" name="end_date">
+        <div class="form-row">
+            <div class="form-group col-lg-6">
+                <label>Date début</label>
+                <input type="date" class="form-control" name="start_date" />
+                <div class="validation"></div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Date fin</label>
+                <input type="date" class="form-control" name="end_date" />
+                <div class="validation"></div>
+            </div>
+        </div>
 
-    <label>Statut</label>
-    <input type="text" name="status">
+        <div class="text-center">
+            <button type="submit" title="Créer le projet">Créer le projet</button>
+        </div>
+    </form>
+</div>
 
-    <button type="submit">Créer le projet</button>
-</form>
+<script>
+document.getElementById('show-form-btn').addEventListener('click', function() {
+    const form = document.getElementById('project-form');
+    form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+});
+</script>
+
 
 @if(session('success'))
     <p style="color: #0f0">{{ session('success') }}</p>
