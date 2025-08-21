@@ -20,6 +20,7 @@ Route::get('/', function () {
         : redirect()->route('login');
 });
 
+
 Route::get('/sunwork-for-drivers', function () { return view('ui-drivers'); }); 
 Route::get('/investment-sunwork', function () { return view('ui-investment'); }); 
 Route::get('/contact-sunwork', function () { return view('ui-contact'); });
@@ -56,18 +57,21 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 
 use App\Http\Controllers\DashboardController;
 
-// Dashboard routes (auth required)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/dashboard/projects', [DashboardController::class, 'storeProject'])->name('project_s');
-});
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 
-Route::get('/projects', [ProjectController::class, 'index'])->name('prj');
-Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('p_destroy');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [ProjectController::class, 'index'])->name('dashboard');
 
+    // Routes pour les projets
+    Route::post('/project/store', [ProjectController::class, 'store'])->name('project_s');
+    Route::delete('/project/{id}/destroy', [ProjectController::class, 'destroy'])->name('p_destroy');
 
+    // Routes pour les tâches
+    Route::post('/task/store', [TaskController::class, 'store'])->name('tasks.store');
+    Route::delete('/task/{id}/destroy', [TaskController::class, 'destroy'])->name('tasks.destroy');
+});
 
 /******************** MULTI-LANGUE ROUTE ********************/
 Route::get('/{page?}', function ($page = 'welcome') {

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;  
 
 class Project extends Model
 {
@@ -21,8 +20,15 @@ class Project extends Model
 
     protected $dates = ['start_date', 'end_date'];
 
+    // Relation des tâches
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    
     public function owner()
     {
-        return $this->belongsTo(Log::class, 'owner_id');
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }
